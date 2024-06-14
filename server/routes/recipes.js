@@ -28,7 +28,6 @@ router.get("/:id", (req, res) => {
 });
 
 router.post("/add", upload.single("image"), (req, res) => {
-    console.log(req, res);
   const { name, description, ingredients, cookingTime } = req.body;
   const image = req.file ? req.file.path : null;
   const newRecipe = {
