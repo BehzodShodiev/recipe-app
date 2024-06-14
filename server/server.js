@@ -1,7 +1,6 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
-const multer = require('multer');
 const path = require('path');
 const recipesRouter = require('./routes/recipes');
 
@@ -17,3 +16,4 @@ app.use('/api/recipes', recipesRouter);
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });
+export default app
