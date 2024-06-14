@@ -1,8 +1,8 @@
 import axios from "axios";
 import { Recipe } from "../interfaces";
 
-const API_URL = "http://localhost:5000/api/recipes";
-// const API_URL = "https://recipe-amoo8u2pr-behzods-projects-4907afc4.vercel.app/api/recipes";
+// const API_URL = "http://localhost:5000/api/recipes";
+const API_URL = "https://recipe-amoo8u2pr-behzods-projects-4907afc4.vercel.app/api/recipes";
 
 export const getRecipesApi = async (): Promise<Recipe[]> => {
   const response = await axios.get(API_URL);
