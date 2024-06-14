@@ -36,6 +36,8 @@ const RecipeDetail: React.FC = () => {
   };
 
   useEffect(() => {
+    console.log("jkjkjjkkj",addRecipeSuccess);
+    
     if (addRecipeSuccess) {
       dispatch(resetAddRecipeSuccess());
       navigate("/");

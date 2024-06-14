@@ -3,7 +3,7 @@ import { AppDispatch, RootState } from "../store";
 import { useEffect } from "react";
 import { getRecipesAsync } from "../features/recipes/recipeThunks";
 import RecipeItem from "../components/RecipeItem";
-import { CircularProgress, CssBaseline, Grid } from "@mui/material";
+import { CircularProgress, CssBaseline, Grid, Typography } from "@mui/material";
 import Layout from "../components/Layout";
 
 const RecipeList: React.FC = () => {
@@ -11,7 +11,9 @@ const RecipeList: React.FC = () => {
   const { recipes, loading, error, searchText } = useSelector(
     (state: RootState) => state.recipes
   );
-
+  const filteredRecipeList = [...recipes].filter((recipe) =>
+    recipe.name.toLowerCase().includes(searchText.toLowerCase())
+  );
   useEffect(() => {
     dispatch(getRecipesAsync());
   }, [dispatch]);
@@ -28,11 +30,21 @@ const RecipeList: React.FC = () => {
           <CircularProgress />
         ) : (
           <Grid container spacing={3}>
-            {[...recipes].filter(recipe => recipe.name.toLowerCase().includes(searchText.toLowerCase())).map((recipe) => (
+            {filteredRecipeList.map((recipe) => (
               <Grid item xs={12} sm={6} md={3} key={recipe.id}>
                 <RecipeItem recipe={recipe} />
               </Grid>
             ))}
+            {filteredRecipeList.length == 0 && (
+              <Typography
+                variant="body2"
+                color="textSecondary"
+                component="p"
+                className="!mt-10 !text-base !text-center !w-full"
+              >
+                No recipe found...
+              </Typography>
+            )}
           </Grid>
         )}
       </Layout>

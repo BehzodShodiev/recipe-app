@@ -72,26 +72,21 @@ const recipeSlice = createSlice({
             .addCase(addNewRecipeAsync.pending, (state) => {
                 state.loading = true;
                 state.error = null;
-                state.addRecipeSuccess = false;
             })
             .addCase(addNewRecipeAsync.fulfilled, (state, action) => {
                 state.loading = false;
                 state.recipes.push(action.payload);
-                state.addRecipeSuccess = true;
             })
             .addCase(addNewRecipeAsync.rejected, (state, action) => {
                 state.loading = false;
                 state.error = action.error.message || "Failed to add recipe";
-                state.addRecipeSuccess = false;
             })
             .addCase(editRecipeAsync.pending, (state) => {
                 state.loading = true;
                 state.error = null;
-                state.addRecipeSuccess = false;
             })
             .addCase(editRecipeAsync.fulfilled, (state, action) => {
                 state.loading = false;
-                state.addRecipeSuccess = true;
                 const index = state.recipes.findIndex(
                     (r) => r.id === action.payload.id
                 );
@@ -102,7 +97,6 @@ const recipeSlice = createSlice({
             .addCase(editRecipeAsync.rejected, (state, action) => {
                 state.loading = false;
                 state.error = action.error.message || "Failed to edit recipe";
-                state.addRecipeSuccess = false;
             })
             .addCase(deleteRecipeAsync.pending, (state) => {
                 state.loading = true;
