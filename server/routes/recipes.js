@@ -28,18 +28,25 @@ router.get("/:id", (req, res) => {
 });
 
 router.post("/add", upload.single("image"), (req, res) => {
-  const { name, description, ingredients, cookingTime } = req.body;
-  const image = req.file ? req.file.path : null;
-  const newRecipe = {
-    id: recipes.length + 1,
-    name,
-    description,
-    ingredients: JSON.parse(ingredients),
-    image,
-    cookingTime,
-  };
-  recipes.push(newRecipe);
-  res.status(201).json(newRecipe);
+    try {
+        const { name, description, ingredients, cookingTime } = req.body;
+        console.log("req:", req);
+        const image = req.file ? req.file.path : null;
+        const newRecipe = {
+          id: recipes.length + 1,
+          name,
+          description,
+          ingredients: JSON.parse(ingredients),
+          image,
+          cookingTime,
+        };
+        recipes.push(newRecipe);
+        res.status(201).json(newRecipe);
+    } catch(error) {
+        console.log(error);
+        res.status(500).json({ error: 'An internal server error occurred' });
+    }
+
 });
 
 router.put("/edit/:id", upload.single("image"), (req, res) => {
