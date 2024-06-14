@@ -3,7 +3,7 @@ import { AppDispatch, RootState } from "../store";
 import { useEffect } from "react";
 import { getRecipesAsync } from "../features/recipes/recipeThunks";
 import RecipeItem from "../components/RecipeItem";
-import { CircularProgress, CssBaseline, Grid, Typography } from "@mui/material";
+import { Box, CircularProgress, CssBaseline, Grid, Typography } from "@mui/material";
 import Layout from "../components/Layout";
 
 const RecipeList: React.FC = () => {
@@ -27,7 +27,9 @@ const RecipeList: React.FC = () => {
       <CssBaseline />
       <Layout>
         {loading ? (
-          <CircularProgress />
+          <Box className="!w-full !flex justify-center">
+            <CircularProgress />
+          </Box>
         ) : (
           <Grid container spacing={3}>
             {filteredRecipeList.map((recipe) => (
