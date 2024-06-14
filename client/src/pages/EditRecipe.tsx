@@ -30,7 +30,7 @@ const EditRecipe: React.FC = () => {
     formData.append("ingredients", JSON.stringify(values.ingredients));
 
     dispatch(editRecipeAsync(formData));
-    navigate('/');
+    navigate("/");
   };
   useEffect(() => {
     dispatch(getRecipeByIdAsync(Number(id)));
@@ -42,7 +42,9 @@ const EditRecipe: React.FC = () => {
   return (
     <Layout isShowSearch={false}>
       <Container>
-        <Typography variant="h4">Edit Recipe</Typography>
+        <Typography component="h1" variant="h5" className="text-center !mb-4">
+          Edit Recipe
+        </Typography>
         <RecipeForm
           initialValues={{
             name: recipe.name,

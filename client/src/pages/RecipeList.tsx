@@ -8,14 +8,13 @@ import Layout from "../components/Layout";
 
 const RecipeList: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
-  const { recipes, loading, error } = useSelector(
+  const { recipes, loading, error, searchText } = useSelector(
     (state: RootState) => state.recipes
   );
+
   useEffect(() => {
     dispatch(getRecipesAsync());
   }, [dispatch]);
-  
-  if (loading) return <CircularProgress />;
 
   if (error) {
     return <>Error</>;
@@ -25,13 +24,17 @@ const RecipeList: React.FC = () => {
     <>
       <CssBaseline />
       <Layout>
-        <Grid container spacing={3}>
-          {recipes.map((recipe) => (
-            <Grid item xs={12} sm={6} md={3} key={recipe.id}>
-              <RecipeItem recipe={recipe} />
-            </Grid>
-          ))}
-        </Grid>
+        {loading ? (
+          <CircularProgress />
+        ) : (
+          <Grid container spacing={3}>
+            {[...recipes].filter(recipe => recipe.name.toLowerCase().includes(searchText.toLowerCase())).map((recipe) => (
+              <Grid item xs={12} sm={6} md={3} key={recipe.id}>
+                <RecipeItem recipe={recipe} />
+              </Grid>
+            ))}
+          </Grid>
+        )}
       </Layout>
     </>
   );

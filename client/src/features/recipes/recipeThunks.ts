@@ -37,8 +37,6 @@ export const addNewRecipeAsync = createAsyncThunk(
   async (recipe: FormData, thunkAPI) => {
     try {
       const response = await addNewRecipeApi(recipe);
-      console.log("RESP: ", response);
-
       return response;
     } catch (error) {
       return thunkAPI.rejectWithValue(error);

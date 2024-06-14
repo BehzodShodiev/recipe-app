@@ -10,6 +10,7 @@ import {
   Typography,
   Container,
   Paper,
+  Box,
 } from "@mui/material";
 import { Add, Remove } from "@mui/icons-material";
 
@@ -27,9 +28,9 @@ const RecipeFormSchema = Yup.object().shape({
         name: Yup.string().required("Required"),
       })
     )
-    .required("Must have ingredients")
-    .min(1, "Minimum of 1 ingredient"),
-  image: Yup.mixed().required('An image is required'),
+    .required("Required")
+    .min(1, "Minimum 1 ingredient"),
+  image: Yup.mixed().required("Required"),
   cookingTime: Yup.number().min(1, "Minimum 1 minute").required("Required"),
 });
 
@@ -37,15 +38,19 @@ const RecipeForm: React.FC<RecipeFormProps> = ({ initialValues, onSubmit }) => {
   return (
     <Container component="main" maxWidth="md">
       <Paper sx={{ p: 2 }}>
-        <Typography component="h1" variant="h5">
-          Add / Edit Recipe
-        </Typography>
         <Formik
           initialValues={initialValues}
           validationSchema={RecipeFormSchema}
           onSubmit={onSubmit}
         >
-          {({ values, errors, touched, handleChange, handleBlur, setFieldValue }) => (
+          {({
+            values,
+            errors,
+            touched,
+            handleChange,
+            handleBlur,
+            setFieldValue,
+          }) => (
             <Form>
               <TextField
                 fullWidth
@@ -57,8 +62,8 @@ const RecipeForm: React.FC<RecipeFormProps> = ({ initialValues, onSubmit }) => {
                 onChange={handleChange}
                 onBlur={handleBlur}
                 error={touched.name && Boolean(errors.name)}
+                helperText={touched.name && errors.name}
               />
-              <ErrorMessage name="name" />
               <TextField
                 fullWidth
                 margin="normal"
@@ -71,8 +76,8 @@ const RecipeForm: React.FC<RecipeFormProps> = ({ initialValues, onSubmit }) => {
                 onChange={handleChange}
                 onBlur={handleBlur}
                 error={touched.description && Boolean(errors.description)}
+                helperText={touched.description && errors.description}
               />
-              <ErrorMessage name="description" />
               <FieldArray name="ingredients">
                 {({ push, remove }) => (
                   <div>
@@ -90,20 +95,34 @@ const RecipeForm: React.FC<RecipeFormProps> = ({ initialValues, onSubmit }) => {
                             value={ingredient.name}
                             onChange={handleChange}
                             onBlur={handleBlur}
+                            error={
+                              touched.ingredients &&
+                              touched.ingredients[index] &&
+                              Boolean(errors.ingredients)
+                            }
+                            helperText={
+                              touched.ingredients &&
+                              touched.ingredients[index] &&
+                              Boolean(errors.ingredients)
+                            }
                           />
                         </Grid>
-                        <ErrorMessage name={`ingredients.${index}.name`} />
-                        <Grid item xs={2}>
-                          <IconButton onClick={() => remove(index)}>
-                            <Remove />
-                          </IconButton>
-                        </Grid>
+                        {index > 0 && (
+                          <Grid item xs={2}>
+                            <Box className="!flex items-center h-full ">
+                              <IconButton onClick={() => remove(index)}>
+                                <Remove />
+                              </IconButton>
+                            </Box>
+                          </Grid>
+                        )}
                       </Grid>
                     ))}
                     <Button
                       variant="contained"
                       onClick={() => push({ name: "" })}
                       startIcon={<Add />}
+                      className="!normal-case"
                     >
                       Add Ingredient
                     </Button>
@@ -115,12 +134,18 @@ const RecipeForm: React.FC<RecipeFormProps> = ({ initialValues, onSubmit }) => {
                 name="image"
                 type="file"
                 onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
-                  setFieldValue("image", event.currentTarget.files ? event.currentTarget.files[0] : null);
+                  setFieldValue(
+                    "image",
+                    event.currentTarget.files
+                      ? event.currentTarget.files[0]
+                      : null
+                  );
                 }}
+                className="!mt-5"
                 inputProps={{ "aria-label": "Upload Image" }}
+                error={touched.image && Boolean(errors.image)}
+                helperText={touched.image && errors.image}
               />
-              <ErrorMessage name="image" />
-
               <TextField
                 fullWidth
                 margin="normal"
@@ -132,8 +157,8 @@ const RecipeForm: React.FC<RecipeFormProps> = ({ initialValues, onSubmit }) => {
                 onChange={handleChange}
                 onBlur={handleBlur}
                 error={touched.cookingTime && Boolean(errors.cookingTime)}
+                helperText={touched.cookingTime && errors.cookingTime}
               />
-              <ErrorMessage name="cookingTime" />
               <Button
                 type="submit"
                 variant="contained"

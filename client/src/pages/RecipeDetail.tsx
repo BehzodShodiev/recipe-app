@@ -11,24 +11,37 @@ import {
   Grid,
 } from "@mui/material";
 import { AppDispatch, RootState } from "../store";
-import { getRecipeByIdAsync } from "../features/recipes/recipeThunks";
+import {
+  deleteRecipeAsync,
+  getRecipeByIdAsync,
+} from "../features/recipes/recipeThunks";
 import { PURE_API_URL } from "../constants";
 import Layout from "../components/Layout";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
+import { resetAddRecipeSuccess } from "../features/recipes/recipeSlice";
 
 const RecipeDetail: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
-  const {
-    recipe,
-    loading,
-    error,
-  } = useSelector((state: RootState) => state.recipes);
-  const editRecipe = ()=> {
+  const { recipe, loading, error, addRecipeSuccess } = useSelector(
+    (state: RootState) => state.recipes
+  );
+  const editRecipe = () => {
     navigate(`/recipe/edit/${id}`);
-  }
+  };
+  const deleteRecipe = () => {
+    dispatch(deleteRecipeAsync(Number(id)));
+  };
+
+  useEffect(() => {
+    if (addRecipeSuccess) {
+      dispatch(resetAddRecipeSuccess());
+      navigate("/");
+    }
+  }, [addRecipeSuccess, dispatch, navigate]);
+
   useEffect(() => {
     if (id) {
       dispatch(getRecipeByIdAsync(Number(id)));
@@ -41,8 +54,14 @@ const RecipeDetail: React.FC = () => {
   return (
     <Layout isShowSearch={false}>
       <Box className="relative">
-        <EditIcon onClick={editRecipe} className="absolute top-0 right-10 text-blue-500 cursor-pointer"/>
-        <DeleteIcon className="absolute top-0 right-0 text-red-500 cursor-pointer"/>
+        <EditIcon
+          onClick={editRecipe}
+          className="absolute top-0 right-10 text-blue-500 cursor-pointer"
+        />
+        <DeleteIcon
+          onClick={deleteRecipe}
+          className="absolute top-0 right-0 text-red-500 cursor-pointer"
+        />
         <Grid container spacing={2}>
           <Grid item xs={4}>
             <img
